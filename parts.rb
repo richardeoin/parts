@@ -5,22 +5,13 @@ require_relative 'farnell'
 
 puts "Tracking parts..."
 
-# By default use files in the parent directory
-input_filename = '../parts'
-output_filename = '../Parts.md'
-
-# If not, maybe the local directory
-if not File.file?(input_filename)
-  puts "Using local directory"
-
-  input_filename = 'parts'
-  output_filename = 'Parts.md'
-end
+input_filename = 'parts'
+output_filename = 'Parts.md'
 
 output = File.open(output_filename, "w")
 
 # Parse the input file
-  File.readlines(input_filename).each do |line|
+File.readlines(input_filename).each do |line|
   fields = line.split
   i = 0
 
