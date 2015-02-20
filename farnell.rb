@@ -15,8 +15,7 @@ def scrape_farnell (order_code)
 
   item = Hash.new
   item[:order_code] = order_code
-  item[:page] = "http://uk.farnell.com/jsp/search/browse.jsp"+
-    ";jsessionid=0?N=0&Ntk=partnumbers&Ntt="+order_code
+  item[:page] = "http://uk.farnell.com/webapp/wcs/stores/servlet/Search?st="+order_code
 
   @fn_page = Nokogiri::HTML(open(item[:page]))
 
