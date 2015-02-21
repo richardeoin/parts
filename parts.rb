@@ -18,42 +18,40 @@ input_rows = File.readlines(input_filename)
 output_rows = Parallel.map(input_rows){|line|
 
   fields = line.split
+  suppliers = []
   i = 0
 
   # Try farnell
   farnell = scrape_farnell(fields[i])
   if farnell
+    puts " -- Found at Farnell: "+farnell[:partname]
+    suppliers.push(farnell)
     i = i + 1
   end
 
   # Try mouser
   mouser = scrape_mouser(fields[i])
   if mouser
+    puts " -- Found at Mouser: "+mouser[:partname]
+    suppliers.push(mouser)
     i = i + 1
   end
 
   # Next we should have a quantity
   quantity = fields[i].to_i
 
-  if farnell and quantity
-    puts " -- Found at Farnell: "+farnell[:partname]
+  # If this is a valid output
+  if suppliers[0] and quantity
 
-    supplier_details = "|#{farnell[:partname]}"+
-      "|#{farnell[:desc]}"+
-      "|[#{farnell[:order_code]}](#{farnell[:page]})"
-  end
+    # Parse links into markdown
+    links = suppliers.map do |supplier|
+      "[#{supplier[:order_code]}](#{supplier[:page]})"
+    end
 
-  if mouser and quantity
-    puts " -- Found at Mouser: "+mouser[:partname]
-
-    supplier_details = "|#{mouser[:partname]}"+
-      "|#{mouser[:desc]}"+
-      "|[#{mouser[:order_code]}](#{mouser[:page]})"
-  end
-
-  if supplier_details
     # Processed output
-    output = supplier_details+"|#{quantity}|#{fields[i+1..-1].join(" ")}"
+    output = "|#{suppliers[0][:partname]}|#{suppliers[0][:desc]}"+
+      "|#{links.join(" ")}|#{quantity}|#{fields[i+1..-1].join(" ")}"
+
   else
     # Output unchanged
     output = line
