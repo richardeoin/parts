@@ -1,6 +1,8 @@
 ## Takes a simple whitespace-separated parts list and outputs in
 ## markdown
 
+require 'parallel'
+
 require_relative 'farnell'
 require_relative 'mouser'
 
@@ -9,10 +11,12 @@ puts "Tracking parts..."
 input_filename = 'parts'
 output_filename = 'Parts.md'
 
-output = File.open(output_filename, "w")
+# Read the input file into a Hash
+input_rows = File.readlines(input_filename)
 
-# Parse the input file
-File.readlines(input_filename).each do |line|
+# Process each input row concurrently
+output_rows = Parallel.map(input_rows){|line|
+
   fields = line.split
   i = 0
 
@@ -49,12 +53,16 @@ File.readlines(input_filename).each do |line|
 
   if supplier_details
     # Processed output
-    output.puts supplier_details+"|#{quantity}|#{fields[i+1..-1].join(" ")}"
+    output = supplier_details+"|#{quantity}|#{fields[i+1..-1].join(" ")}"
   else
     # Output unchanged
-    output << line
+    output = line
   end
 
-end
+  output
+}
 
+# And dump to the output file
+output = File.open(output_filename, "w")
+output.puts output_rows
 output.close
