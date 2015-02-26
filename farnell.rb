@@ -30,30 +30,38 @@ def scrape_farnell (order_code)
   stock_numbers = @fn_page.css("div #priceWrap ul li strong")
   stock_locations = @fn_page.css("div #priceWrap ul li")
 
-  for i in 0...(stock_numbers.count)
+  if stock_numbers and stock_locations
+    for i in 0...(stock_numbers.count)
 
-    number = stock_numbers[i].inner_html
-    location = stock_locations[i].inner_html[/\(.*stock\)/]
+      number = stock_numbers[i].inner_html
+      location = stock_locations[i].inner_html[/\(.*stock\)/]
 
-    stocks[location] = number
+      stocks[location] = number
+    end
+    item[:stocks] = stocks
+  else
+    puts "Stock information not found"
   end
-  item[:stocks] = stocks
 
   # Pricing
   prices = Hash.new
   price_breaks = @fn_page.xpath("//table[@class='pricing ']/tbody/tr/td[@class='qty']")
-  price_prices = @fn_page.xpath("//table[@class='pricing ']/tbody/tr/td[@class='threeColTd']")
+  price_prices = @fn_page.xpath("//table[@class='pricing ']/tbody/tr/td[@class='threeColTd pdpPriceRightCol']")
 
-  for i in 0...(price_breaks.count)
+  if price_breaks and price_prices
+    for i in 0...(price_breaks.count)
 
-    min = price_breaks[i].inner_html[/(\d+)(.*-|\+)/, 1].to_i
-    max = price_breaks[i].inner_html[/-.+?(\d+)/, 1].to_i
-    max = nil if max == 0
-    price = price_prices[i].inner_html[/£\d+\.\d+/]
+      min = price_breaks[i].inner_html[/(\d+)(.*-|\+)/, 1].to_i
+      max = price_breaks[i].inner_html[/-.+?(\d+)/, 1].to_i
+      max = nil if max == 0
+      price = price_prices[i].inner_html[/£\d+\.\d+/]
 
-    prices[{:min => min, :max => max}] = price
+      prices[{:min => min, :max => max}] = price
+    end
+    item[:prices] = prices
+  else
+    puts "Pricing information not found"
   end
-  item[:prices] = prices
 
   # Order quantities
   common_info = @fn_page.css("div #priceWrap div #commonInfo p").to_s
