@@ -14,7 +14,8 @@ Is ruby because [nokogiri](http://www.nokogiri.org/) and [parallel](https://gith
 ### Prerequisites?
 
 ```
-gem install nokogiri parallel
+sudo apt-get install ruby-dev libxslt-dev libxml2-dev
+sudo gem install nokogiri parallel
 ```
 
 or something. sorry
