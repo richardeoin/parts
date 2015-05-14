@@ -46,7 +46,7 @@ def scrape_farnell (order_code)
   # Pricing
   prices = Hash.new
   price_breaks = @fn_page.xpath("//table[@class='pricing ']/tbody/tr/td[@class='qty']")
-  price_prices = @fn_page.xpath("//table[@class='pricing ']/tbody/tr/td[@class='threeColTd pdpPriceRightCol']")
+  price_prices = @fn_page.xpath("//table[@class='pricing ']/tbody/tr/td[@class='threeColTd']")
 
   if price_breaks and price_prices
     for i in 0...(price_breaks.count)
