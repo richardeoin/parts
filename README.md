@@ -24,6 +24,9 @@ or something. sorry
 
 `parts` --> `Parts.md` in the directory ruby is run from.
 
+Also generates `farnell.csv` and `mouser.csv` for use with BOM import
+tools.
+
 ### What exactly does it output??
 
 Lines that meet the above specification will be replaced by lines from
