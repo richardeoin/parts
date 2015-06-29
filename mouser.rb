@@ -9,7 +9,7 @@ require 'open-uri'
 
 def scrape_mouser (order_code)
 
-  if not /^\d{3}\-/.match(order_code)
+  if not /^\d{2,3}\-/.match(order_code)
     return nil
   end
 
