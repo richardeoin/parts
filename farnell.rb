@@ -9,7 +9,7 @@ require 'open-uri'
 
 def scrape_farnell (order_code)
 
-  if not /^\d{7}$/.match(order_code)
+  if not /^\d{6,7}$/.match(order_code)
     return nil
   end
 
